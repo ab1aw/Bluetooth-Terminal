@@ -31,6 +31,7 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
     private TextView text;
     private ScrollView scrollView;
     private boolean registered=false;
+    private boolean echo_enabled = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +111,17 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
                             Uri.parse("http://play.google.com/store/apps/details?id=" + this.getPackageName())));
                 }
                 return true;
+
+            case R.id.echo:
+                if (item.isChecked()) {
+                    item.setChecked(false);
+                }
+                else {
+                    item.setChecked(true);
+                }
+                echo_enabled = item.isChecked();
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -146,6 +158,10 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
     @Override
     public void onMessage(String message) {
         Display(name+": "+message);
+        if (echo_enabled) {
+            b.send("echoed : " + message);
+            Display("Echo: "+ message);
+        }
     }
 
     @Override
